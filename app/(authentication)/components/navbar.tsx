@@ -2,9 +2,10 @@ import Link from "next/link";
 
 export const Navbar = () => {
   return (
-    <header className="px-4 lg:px-6 h-14 flex items-center border-b">
+    <div className="fixed top-0 w-full h-14 px-4 shadow-sm bg-white
+      flex items-center">
       <Link className="flex items-center justify-center" href="/">
-        <span className="font-bold text-xl">GoalTracker</span>
+        <span className="font-bold text-xl">MokuMoku</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
         <Link className="text-sm font-medium hover:underline underline-offset-4" href="/login">
@@ -14,6 +15,6 @@ export const Navbar = () => {
           登録
         </Link>
       </nav>
-    </header>
+    </div>
   );
 };

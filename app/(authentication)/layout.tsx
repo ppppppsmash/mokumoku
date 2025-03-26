@@ -9,7 +9,7 @@ const AuthenticationLayout = ({
     <div className="h-full">
       <Navbar />
 
-      <main className="pt-40 pb-20">
+      <main className="pt-60 pb-20">
         {children}
       </main>
     </div>
