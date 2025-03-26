@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { GoalForm } from "@/components/app-goal-form"
 import {
   Dialog,
@@ -12,9 +13,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 
-const TargetDialog = () => {
+const GoalDialog = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2">
           <PlusCircle className="h-4 w-4" />
@@ -29,10 +32,10 @@ const TargetDialog = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <GoalForm />
+        <GoalForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default TargetDialog;
+export default GoalDialog;

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,23 +11,54 @@ import { Switch } from "@/components/ui/switch";
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+} from "@/components/ui/toggle-group";
+import { useGoalForm } from "@/hooks/use-goal-form";
 
-export function GoalForm() {
-  const [goalType, setGoalType] = useState("daily");
+interface GoalFormProps {
+  onSuccess?: () => void;
+}
+
+export function GoalForm({ onSuccess }: GoalFormProps) {
+  const {
+    goalType,
+    setGoalType,
+    formData,
+    isSubmitting,
+    handleSubmit,
+    handleInputChange,
+  } = useGoalForm();
+
+  const handleSuccess = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const success = await handleSubmit(e);
+    if (success) {
+      console.log(success);
+      onSuccess?.();
+    }
+  }
 
   return (
     <Card className="w-full mx-auto mb-6">
       <CardContent>
-        <form className="space-y-4">
+        <form onSubmit={handleSuccess} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">目標タイトル</Label>
-            <Input id="title" placeholder="例: 毎日30分運動する" />
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => handleInputChange("title", e.target.value)}
+              placeholder="例: 毎日30分運動する"
+              required
+            />
           </div>
 
           <div className="space-y-2">
             <Label>目標タイプ</Label>
-            <RadioGroup defaultValue="daily" onValueChange={setGoalType} className="flex space-x-4">
+            <RadioGroup
+              defaultValue="daily"
+              onValueChange={(value) => setGoalType(value as "daily" | "monthly")}
+              className="flex space-x-4"
+            >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="daily" id="daily" />
                 <Label htmlFor="daily">日次目標</Label>
@@ -43,11 +73,21 @@ export function GoalForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="target">目標値</Label>
-              <Input id="target" type="number" placeholder="例: 30" />
+              <Input
+                id="target"
+                type="number"
+                value={formData.targetValue}
+                onChange={(e) => handleInputChange("targetValue", e.target.value)}
+                placeholder="例: 30"
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="unit">単位</Label>
-              <Select>
+              <Select
+                value={formData.unit}
+                onValueChange={(value) => handleInputChange("unit", value)}
+              >
                 <SelectTrigger id="unit">
                   <SelectValue placeholder="単位を選択" />
                 </SelectTrigger>
@@ -68,12 +108,17 @@ export function GoalForm() {
           {goalType === "daily" && (
             <div className="space-y-2">
               <Label>繰り返し</Label>
-              <ToggleGroup className="flex flex-wrap gap-2" type="multiple">
+              <ToggleGroup
+                type="multiple"
+                value={formData.repeatDays}
+                onValueChange={(value) => handleInputChange("repeatDays", value)}
+                className="flex flex-wrap gap-2"
+              >
                 {["月", "火", "水", "木", "金", "土", "日"].map((day) => (
                   <ToggleGroupItem key={day} value={day} asChild>
                     <Button variant="outline" type="button">
-                    {day}
-                  </Button>
+                      {day}
+                    </Button>
                   </ToggleGroupItem>
                 ))}
               </ToggleGroup>
@@ -83,24 +128,42 @@ export function GoalForm() {
           {goalType === "monthly" && (
             <div className="space-y-2">
               <Label htmlFor="deadline">期限</Label>
-              <Input id="deadline" type="date" />
+              <Input
+                id="deadline"
+                type="date"
+                value={formData.deadline}
+                onChange={(e) => handleInputChange("deadline", e.target.value)}
+                required
+              />
             </div>
           )}
 
           <div className="space-y-2">
             <Label htmlFor="description">詳細説明（任意）</Label>
-            <Textarea id="description" placeholder="目標の詳細や達成するための方法など" />
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleInputChange("description", e.target.value)}
+              placeholder="目標の詳細や達成するための方法など"
+            />
           </div>
 
           <div className="flex items-center space-x-2">
-            <Switch id="public" />
+            <Switch
+              id="public"
+              checked={formData.isPublic}
+              onCheckedChange={(checked) => handleInputChange("isPublic", checked)}
+            />
             <Label htmlFor="public">この目標を公開する</Label>
           </div>
+
+          <CardFooter className="flex justify-end space-x-2">
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "保存中..." : "保存"}
+            </Button>
+          </CardFooter>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end space-x-2">
-        <Button>保存</Button>
-      </CardFooter>
     </Card>
   );
-};
+}

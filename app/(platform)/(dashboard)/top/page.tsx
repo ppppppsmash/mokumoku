@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { createUser } from "@/app/actions/user";
-import TargetDialog from "@/components/app-target-dialog";
+import GoalDialog from "@/components/app-goal-dialog";
 import { AppTab } from "@/components/app-tab";
 import { redirect } from "next/navigation";
 
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
       <div className="p-4 md:p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">ダッシュボード</h1>
-          <TargetDialog />
+          <GoalDialog />
         </div>
 
         <AppTab />
