@@ -1,21 +1,5 @@
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from "@clerk/nextjs"
+import { SignIn } from "@clerk/nextjs";
 
 export default function Page() {
-  return (
-    <>
-      <SignedOut>
-        <SignInButton />
-        <SignUpButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </>
-  );
+  return <SignIn />
 };
