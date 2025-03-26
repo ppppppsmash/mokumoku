@@ -1,6 +1,21 @@
-import { SignIn } from "@clerk/nextjs"
-// https://clerk.com/docs/references/nextjs/custom-signup-signin-pages
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from "@clerk/nextjs"
 
 export default function Page() {
-  return <SignIn />
-}
+  return (
+    <>
+      <SignedOut>
+        <SignInButton />
+        <SignUpButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </>
+  );
+};
