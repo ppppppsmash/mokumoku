@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export const Navbar = () => {
   return (
-    <div className="fixed top-0 w-full h-14 px-4 shadow-sm bg-white
-      flex items-center">
+    <div className="fixed top-0 w-full h-14 px-4 bg-white
+      flex items-center z-50">
       <Link className="flex items-center justify-center" href="/">
         <span className="font-bold text-xl">MokuMoku</span>
       </Link>

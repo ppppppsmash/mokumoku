@@ -1,7 +1,7 @@
 import Link from "next/link";
 import localFont from "next/font/local";
 import { Poppins } from "next/font/google";
-
+import { ThreeDMarquee } from "./components/marquee";
 
 const textFont = Poppins({
   subsets: ["latin"],
@@ -12,10 +12,10 @@ const textFont = Poppins({
 
 const AuthenticationPage = () => {
   return (
-    <div className="flex items-center justify-center flex-col">
-      <div className="flex items-center justify-center flex-col">
+    <div className="h-[100svh] flex items-center justify-center">
+      <div className="flex items-center justify-center flex-col bg-white/20 backdrop-blur-sm z-50 rounded-xl px-10 py-20">
         <div className="space-y-2">
-          <h1 className="text-3xl md:text-6xl text-center tect-neutral-800 mb-6">
+          <h1 className="text-3xl md:text-6xl text-center tect-neutral-800 mb-6 font-semibold">
             目標達成して、共に祝おう
           </h1>
           <div className="text-3xl md:text-6xl bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white px-4 p-2 rounded-md pb-4 w-fit mx-auto text-center">
