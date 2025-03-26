@@ -8,7 +8,7 @@ const handler = async () => {
     const { userId } = await auth();
     const user = await currentUser();
 
-    if (!userId || !user) {
+    if (!userId || !currentUser) {
       throw new Error("認証されていません");
     }
 
@@ -25,8 +25,8 @@ const handler = async () => {
     await prisma.user.create({
       data: {
         id: userId,
-        email: user.emailAddresses[0].emailAddress,
-        name: user.firstName ? `${user.firstName} ${user.lastName || ""}` : null,
+        email: user?.emailAddresses[0].emailAddress || "",
+        name: user?.firstName ? `${user.firstName} ${user.lastName || ""}` : null,
       },
     });
 

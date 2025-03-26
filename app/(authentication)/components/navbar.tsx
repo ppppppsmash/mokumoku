@@ -1,20 +1,25 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const Navbar = () => {
   return (
-    <div className="fixed top-0 w-full h-14 px-4 bg-white
+    <div className="fixed top-0 w-full h-14 px-4 bg-white/20 backdrop-blur-lg
       flex items-center z-50">
       <Link className="flex items-center justify-center" href="/">
-        <span className="font-bold text-xl">MokuMoku</span>
+        <h2 className="font-bold text-3xl text-white">MokuMoku</h2>
       </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6">
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/login">
-          ログイン
-        </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/register">
-          登録
-        </Link>
-      </nav>
+      <div className="ml-auto flex gap-4 sm:gap-6">
+        <Button size="sm" variant="outline" asChild>
+          <Link href="/sign-in">
+            ログイン
+          </Link>
+        </Button>
+        <Button size="sm" asChild>
+          <Link href="/sign-up">
+            登録
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 };

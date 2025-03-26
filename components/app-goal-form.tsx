@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group"
 
 export function GoalForm() {
-  const [goalType, setGoalType] = useState("daily")
+  const [goalType, setGoalType] = useState("daily");
 
   return (
     <Card className="w-full mx-auto mb-6">
@@ -64,13 +68,15 @@ export function GoalForm() {
           {goalType === "daily" && (
             <div className="space-y-2">
               <Label>繰り返し</Label>
-              <div className="flex flex-wrap gap-2">
+              <ToggleGroup className="flex flex-wrap gap-2" type="multiple">
                 {["月", "火", "水", "木", "金", "土", "日"].map((day) => (
-                  <Button key={day} variant="outline" className="flex-1" type="button">
+                  <ToggleGroupItem key={day} value={day} asChild>
+                    <Button variant="outline" type="button">
                     {day}
                   </Button>
+                  </ToggleGroupItem>
                 ))}
-              </div>
+              </ToggleGroup>
             </div>
           )}
 
@@ -96,6 +102,5 @@ export function GoalForm() {
         <Button>保存</Button>
       </CardFooter>
     </Card>
-  )
-}
-
+  );
+};

@@ -1,7 +1,10 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { week } from "@/config";
 
 const dailyGoals = [
   { id: 1, title: "30分の運動", target: 30, current: 20, unit: "分" },
@@ -16,13 +19,13 @@ const monthlyGoals = [
 ];
 
 const chartData = [
-  { name: "月", 運動: 20, 水分: 75, 読書: 75 },
-  { name: "火", 運動: 60, 水分: 90, 読書: 50 },
-  { name: "水", 運動: 40, 水分: 85, 読書: 80 },
-  { name: "木", 運動: 70, 水分: 60, 読書: 90 },
-  { name: "金", 運動: 50, 水分: 70, 読書: 60 },
-  { name: "土", 運動: 90, 水分: 100, 読書: 70 },
-  { name: "日", 運動: 30, 水分: 80, 読書: 40 },
+  { name: week[0], 運動: 30, 水分: 80, 読書: 40 },
+  { name: week[1], 運動: 20, 水分: 75, 読書: 75 },
+  { name: week[2], 運動: 60, 水分: 90, 読書: 50 },
+  { name: week[3], 運動: 40, 水分: 85, 読書: 80 },
+  { name: week[4], 運動: 70, 水分: 60, 読書: 90 },
+  { name: week[5], 運動: 50, 水分: 70, 読書: 60 },
+  { name: week[6], 運動: 90, 水分: 100, 読書: 70 },
 ];
 
 export const AppTab = () => {
