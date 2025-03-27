@@ -14,6 +14,26 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum GoalType {
+  daily
+  monthly
+}
+
+enum GoalCategory {
+  health
+  learning
+  work
+  personal
+  sports
+  other
+}
+
+enum GoalStatus {
+  active
+  completed
+  failed
+}
+
 model User {
   id String @id @default(uuid())
   email String @unique
@@ -21,28 +41,22 @@ model User {
   goals Goal[]
 }
 
-enum GoalType {
-  daily
-  monthly
-}
-
 model Goal {
   id          String   @id @default(uuid())
   title       String
-  goalType    GoalType
-  targetValue Int
-  unit        String
   description String?
+  goalType    GoalType
+  category    GoalCategory?
+  targetValue Int
+  currentValue Int?
+  unit        String?
   isPublic    Boolean  @default(false)
+  status      GoalStatus
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
-
-  // 日次目標の場合の繰り返し設定
-  repeatDays  String[] // ["月", "火", "水", "木", "金", "土", "日"]
-  
-  // 月次目標の場合の期限
+  user         User   @relation(fields: [userId], references: [id])
+  repeatDays  String[]
   deadline    DateTime?
 
   @@index([userId])
