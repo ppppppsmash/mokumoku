@@ -16,6 +16,8 @@ import {
 import { appName, navItems } from "@/config";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+
 export function AppSidebar() {
   const { user } = useUser();
   const pathname = usePathname();
@@ -23,7 +25,10 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{appName}</SidebarGroupLabel>
+          <SidebarGroupLabel className="flex my-12 p-2 justify-start">
+            <Image src="/logo.png" alt="logo" width={240} height={32} />
+          </SidebarGroupLabel>
+
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
