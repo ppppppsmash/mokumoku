@@ -1,5 +1,6 @@
 import { AppGoalDialog } from "@/components/app-goal-dialog";
 import { AppDashboardPanel } from "@/components/app-dashboard-panel";
+import { Confetti } from "@/components/confetti";
 
 export default async function DashboardPage() {
   return (
@@ -9,7 +10,9 @@ export default async function DashboardPage() {
           <AppGoalDialog />
         </div>
 
-      <AppDashboardPanel />
+        <Confetti />
+
+        <AppDashboardPanel />
     </div>
   );
 }
