@@ -6,8 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
-
-export function AppGoalPanel() {
+export function AppDashboardPanel() {
   const { goals, isLoading, error } = useGoals();
 
   const dailyGoals = goals?.filter(goal => goal.goalType === "daily") || [];

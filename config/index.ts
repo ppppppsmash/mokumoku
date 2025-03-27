@@ -26,7 +26,7 @@ export const appName = "MokuMoku";
 export const navItems = [
   {
     title: "ダッシュボード",
-    url: "/top",
+    url: "/dashboard",
     icon: Home,
   },
   {

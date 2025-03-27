@@ -26,7 +26,7 @@ const handler = async (data: z.infer<typeof CreateGoal>) => {
       }
     });
 
-    revalidatePath("/top");
+    revalidatePath("/dashboard");
     return { success: true, data: goal };
   } catch (error) {
     console.error("目標作成エラー:", error);
