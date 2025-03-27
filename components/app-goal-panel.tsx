@@ -30,11 +30,11 @@ export const AppGoalPanel = () => {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">{goal.title}</CardTitle>
         <CardDescription>
-          {goal.currentValue || 0} / {goal.targetValue} {goal.unit}
+          {goal.currentValue ?? 0} / {goal.targetValue} {goal.unit}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Progress value={((goal.currentValue || 0) / goal.targetValue) * 100} className="h-2" />
+        <Progress value={((goal.currentValue ?? 0) / goal.targetValue) * 100} className="h-2" />
       </CardContent>
     </Card>
   )

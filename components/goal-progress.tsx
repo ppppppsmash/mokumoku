@@ -15,23 +15,23 @@ interface GoalProgressProps {
 }
 
 export function GoalProgress({ goal, onUpdateProgress, expanded, onToggleExpand }: GoalProgressProps) {
-  const [progressValue, setProgressValue] = useState(goal.currentValue.toString())
+  const [progressValue, setProgressValue] = useState((goal.currentValue ?? 0).toString())
 
   const handleProgressUpdate = () => {
     const newValue = Number(progressValue)
     if (!isNaN(newValue) && newValue >= 0) {
-      // onUpdateProgress({ goalId: goal.id, current: newValue })
+      onUpdateProgress?.({ goalId: goal.id, current: newValue })
     }
   }
 
-  const progressPercentage = Math.min(Math.round((goal.currentValue / goal.targetValue) * 100), 100)
+  const progressPercentage = Math.min(Math.round(((goal.currentValue ?? 0) / goal.targetValue) * 100), 100)
   const isCompleted = goal.status === "completed"
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="text-sm font-medium">
-          進捗: {goal.currentValue} / {goal.targetValue} {goal.unit}
+          進捗: {goal.currentValue ?? 0} / {goal.targetValue} {goal.unit}
         </div>
         <Button variant="ghost" size="sm" onClick={onToggleExpand} className="h-6 w-6 p-0">
           {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
