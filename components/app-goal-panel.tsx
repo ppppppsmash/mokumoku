@@ -87,7 +87,13 @@ export const AppGoalPanel = () => {
         </TabsContent>
 
         <TabsContent value="all" className="space-y-6">
-
+          <GoalList
+            goals={goals}
+            onEdit={()=> console.log("edit")}
+            // onDelete={deleteGoal}
+            // onUpdateProgress={updateProgress}
+            isLoading={isLoading}
+          />
         </TabsContent>
       </Tabs>
     </>

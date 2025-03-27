@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
 import { Goal } from "@prisma/client";
@@ -42,22 +41,6 @@ export function GoalProgress({ goal, onUpdateProgress, expanded, onToggleExpand 
         <Progress value={progressPercentage} className="h-2" />
         {isCompleted && <CheckCircle2 className="absolute -top-1 -right-1 h-4 w-4 text-green-500" />}
       </div>
-
-      {expanded && (
-        <div className="flex items-center gap-2 mt-2">
-          <Input
-            type="number"
-            value={progressValue}
-            onChange={(e) => setProgressValue(e.target.value)}
-            className="h-8"
-            min="0"
-            max={goal.targetValue}
-          />
-          <Button size="sm" onClick={handleProgressUpdate} className="h-8">
-            更新
-          </Button>
-        </div>
-      )}
     </div>
   )
 }

@@ -10,7 +10,7 @@ const textFont = Poppins({
 const AuthenticationPage = () => {
   return (
     <div className="h-[100svh] flex items-center justify-center">
-      <div className="flex items-center justify-center flex-col bg-white/20 backdrop-blur-sm z-50 rounded-2xl p-20">
+      <div className="flex items-center justify-center flex-col bg-black/10 backdrop-blur-sm z-50 rounded-2xl p-20">
         <div className="space-y-2">
           <h1 className="text-3xl md:text-6xl text-center tect-neutral-800 mb-6 font-semibold">
             目標達成して、共に祝おう

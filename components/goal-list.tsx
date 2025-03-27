@@ -20,7 +20,7 @@ import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
 import { Goal } from "@prisma/client";
 import { GoalProgress } from "@/components/goal-progress";
 import { week } from "@/config";
-
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 interface GoalListProps {
   goals: Goal[]
   onEdit: (goal: Goal) => void
@@ -160,11 +160,19 @@ export function GoalList({ goals, onEdit, onDelete, onUpdateProgress, isLoading 
                   {goal.goalType === "daily" && goal.repeatDays && (
                     <div className="col-span-2">
                       <p className="text-gray-500">繰り返し</p>
-                      {/* <p>
-                        {week
-                          .filter((_, i) => goal.repeatDays?.includes(i))
-                          .join(", ")}
-                      </p> */}
+                      <ToggleGroup
+                        type="multiple"
+                        className="flex flex-wrap gap-2"
+                        value={goal.repeatDays}
+                      >
+                        {week.map((day) => (
+                          <ToggleGroupItem key={day} value={day} name="repeatDays" asChild>
+                            <Button variant="outline" type="button">
+                              {day}
+                            </Button>
+                          </ToggleGroupItem>
+                        ))}
+                      </ToggleGroup>
                     </div>
                   )}
                 </div>
