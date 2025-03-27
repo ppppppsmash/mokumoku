@@ -14,10 +14,11 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { appName, navItems } from "@/config";
-
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 export function AppSidebar() {
   const { user } = useUser();
-
+  const pathname = usePathname();
   return (
     <Sidebar>
       <SidebarContent>
@@ -28,7 +29,7 @@ export function AppSidebar() {
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={item.url} className={cn(pathname === item.url && "bg-[#f1f1f1]")}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>

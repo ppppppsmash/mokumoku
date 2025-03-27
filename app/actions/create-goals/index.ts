@@ -3,19 +3,9 @@
 import { prisma } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { Goal } from "@/config/types";
 
-type CreateGoalInput = {
-  title: string;
-  goalType: "daily" | "monthly";
-  targetValue: number;
-  unit: string;
-  description?: string;
-  isPublic: boolean;
-  repeatDays?: string[];
-  deadline?: Date;
-};
-
-export async function createGoal(data: CreateGoalInput) {
+export async function createGoal(data: Omit<Goal, "userId">) {
   try {
     const { userId } = await auth();
 
@@ -27,7 +17,11 @@ export async function createGoal(data: CreateGoalInput) {
       data: {
         ...data,
         userId,
-      },
+        status: "active",
+        targetValue: Number(data.targetValue),
+        currentValue: Number(data.currentValue),
+        deadline: data.deadline ? new Date(data.deadline) : undefined,
+      }
     });
 
     revalidatePath("/top");
@@ -36,4 +30,4 @@ export async function createGoal(data: CreateGoalInput) {
     console.error("目標作成エラー:", error);
     return { success: false, message: "目標の作成に失敗しました" };
   }
-} 
+}

@@ -13,12 +13,14 @@ import {
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
 import { useGoalForm } from "@/hooks/use-goal-form";
+import { goalUnit, goalCategory } from "@/config";
+import { format } from "date-fns";
 
 interface GoalFormProps {
   onSuccess?: () => void;
 }
 
-export function GoalForm({ onSuccess }: GoalFormProps) {
+export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
   const {
     goalType,
     setGoalType,
@@ -32,7 +34,6 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
     e.preventDefault();
     const success = await handleSubmit(e);
     if (success) {
-      console.log(success);
       onSuccess?.();
     }
   }
@@ -41,7 +42,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
     <Card className="w-full mx-auto mb-6">
       <CardContent>
         <form onSubmit={handleSuccess} className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Label htmlFor="title">目標タイトル</Label>
             <Input
               id="title"
@@ -52,7 +53,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Label>目標タイプ</Label>
             <RadioGroup
               defaultValue="daily"
@@ -70,19 +71,37 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
             </RadioGroup>
           </div>
 
+          <div className="space-y-4">
+            <Label>目標カテゴリ</Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value) => handleInputChange("category", value)}
+            >
+              <SelectTrigger id="category">
+                <SelectValue placeholder="カテゴリを選択" />
+              </SelectTrigger>
+              <SelectContent>
+                {goalCategory.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-4">
               <Label htmlFor="target">目標値</Label>
               <Input
                 id="target"
-                type="number"
                 value={formData.targetValue}
                 onChange={(e) => handleInputChange("targetValue", e.target.value)}
                 placeholder="例: 30"
                 required
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-4">
               <Label htmlFor="unit">単位</Label>
               <Select
                 value={formData.unit}
@@ -92,14 +111,11 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
                   <SelectValue placeholder="単位を選択" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="minutes">分</SelectItem>
-                  <SelectItem value="hours">時間</SelectItem>
-                  <SelectItem value="times">回</SelectItem>
-                  <SelectItem value="pages">ページ</SelectItem>
-                  <SelectItem value="books">冊</SelectItem>
-                  <SelectItem value="ml">ml</SelectItem>
-                  <SelectItem value="km">km</SelectItem>
-                  <SelectItem value="custom">カスタム</SelectItem>
+                  {goalUnit.map((unit) => (
+                    <SelectItem key={unit.value} value={unit.value}>
+                      {unit.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -131,7 +147,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
               <Input
                 id="deadline"
                 type="date"
-                value={formData.deadline}
+                value={formData.deadline ? format(formData.deadline, "yyyy-MM-dd") : ""}
                 onChange={(e) => handleInputChange("deadline", e.target.value)}
                 required
               />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GoalForm } from "@/components/app-goal-form"
+import { AppGoalForm } from "@/components/app-goal-form"
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 
-const GoalDialog = () => {
+export const AppGoalDialog = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,14 +28,12 @@ const GoalDialog = () => {
         <DialogHeader>
           <DialogTitle>新しい目標を設定</DialogTitle>
           <DialogDescription>
-            テキストテキスト
           </DialogDescription>
         </DialogHeader>
 
-        <GoalForm onSuccess={() => setOpen(false)} />
+        <AppGoalForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
-};
+}
 
-export default GoalDialog;

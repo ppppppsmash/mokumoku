@@ -1,30 +1,21 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { createGoal } from "@/app/actions/goal";
-
-interface GoalFormData {
-  title: string;
-  goalType: "daily" | "monthly";
-  targetValue: string;
-  unit: string;
-  description: string;
-  isPublic: boolean;
-  repeatDays: string[];
-  deadline: string;
-};
+import { createGoal } from "@/app/actions/create-goals";
+import { Goal } from "@/config/types";
 
 export function useGoalForm() {
   const [goalType, setGoalType] = useState<"daily" | "monthly">("daily");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<GoalFormData>({
+
+  const [formData, setFormData] = useState<Omit<Goal, "userId">>({
     title: "",
-    goalType: "daily",
-    targetValue: "",
-    unit: "",
     description: "",
+    goalType: "daily",
+    category: "other",
+    targetValue: 0,
+    currentValue: 0,
+    unit: "",
     isPublic: false,
-    repeatDays: [],
-    deadline: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,13 +25,17 @@ export function useGoalForm() {
     try {
       const result = await createGoal({
         title: formData.title,
-        goalType,
-        targetValue: parseInt(formData.targetValue),
-        unit: formData.unit,
         description: formData.description,
+        goalType,
+        category: formData.category,
+        targetValue: formData.targetValue,
+        currentValue: formData.currentValue,
+        unit: formData.unit,
         isPublic: formData.isPublic,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         repeatDays: goalType === "daily" ? formData.repeatDays : undefined,
-        deadline: goalType === "monthly" ? new Date(formData.deadline) : undefined,
+        deadline: goalType === "monthly" ? formData.deadline : undefined,
       });
 
       if (result.success) {
@@ -48,13 +43,13 @@ export function useGoalForm() {
 
         setFormData({
           title: "",
-          goalType: "daily",
-          targetValue: "",
-          unit: "",
           description: "",
+          goalType: "daily",
+          category: "other",
+          targetValue: 0,
+          currentValue: 0,
+          unit: "",
           isPublic: false,
-          repeatDays: [],
-          deadline: "",
         });
 
         return true;
@@ -70,7 +65,7 @@ export function useGoalForm() {
     return false;
   };
 
-  const handleInputChange = (field: keyof GoalFormData, value: string | boolean | string[]) => {
+  const handleInputChange = (field: keyof Goal, value: string | boolean | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -82,4 +77,4 @@ export function useGoalForm() {
     handleSubmit,
     handleInputChange,
   };
-} 
+}

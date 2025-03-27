@@ -22,6 +22,6 @@ const AuthenticationPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AuthenticationPage;
