@@ -21,7 +21,12 @@ export function GoalStats({ goals }: GoalStatsProps) {
   // 平均達成率
   const averageProgress =
     goals.length > 0
-      ? Math.round(goals.reduce((acc, goal) => acc + (goal.currentValue / goal.targetValue) * 100, 0) / goals.length)
+      ? Math.round(
+          goals.reduce(
+            (acc, goal) => acc + (((goal.currentValue ?? 0) / goal.targetValue) * 100),
+            0
+          ) / goals.length
+        )
       : 0;
 
   return (
