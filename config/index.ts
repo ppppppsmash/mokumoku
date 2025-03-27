@@ -110,11 +110,11 @@ export const goalCategory = [
     value: "work",
   },
   {
-    label: "プライベート",
+    label: "個人",
     value: "personal",
   },
   {
-    label: "スポーツ",
+    label: "運動",
     value: "sports",
   },
   {
