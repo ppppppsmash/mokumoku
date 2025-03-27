@@ -1,53 +1,80 @@
 "use client";
 
+import { Goal, GoalCategory, GoalType } from "@prisma/client";
+import { useState } from "react";
+import { useAction } from "@/hooks/use-action";
+import { createGoal } from "@/app/actions/create-goals";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
-import { useGoalForm } from "@/hooks/use-goal-form";
-import { goalUnit, goalCategory } from "@/config";
-import { format } from "date-fns";
+import { goalUnit, goalCategory, week } from "@/config";
 
 interface GoalFormProps {
+  data: Goal
   onSuccess?: () => void;
 }
 
 export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
-  const {
-    goalType,
-    setGoalType,
-    formData,
-    isSubmitting,
-    handleSubmit,
-    handleInputChange,
-  } = useGoalForm();
+  const [goalType, setGoalType] = useState<GoalType>("daily");
+  const [isPublic, setIsPublic] = useState(false);
+  const [repeatDays, setRepeatDays] = useState<string[]>([]);
 
-  const handleSuccess = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const success = await handleSubmit(e);
-    if (success) {
+  const { execute, fieldErrors, error, data, isLoading } = useAction(createGoal, {
+    onSuccess: (data) => {
+      console.log("目標作成成功:", data);
       onSuccess?.();
-    }
-  }
+    },
+  });
+
+  const onSubmit = (formData: FormData) => {
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const targetValue = formData.get("targetValue") as string;
+    const unit = formData.get("unit") as string;
+    const category = formData.get("category") as GoalCategory;
+    const isPublic = formData.get("isPublic");
+    const deadlineStr = formData.get("deadline") as string | null;
+    const deadline = deadlineStr ? new Date(deadlineStr) : undefined;
+
+    execute({
+      title,
+      description,
+      targetValue: Number(targetValue),
+      currentValue: 0,
+      unit,
+      goalType,
+      category,
+      isPublic: Boolean(isPublic),
+      repeatDays,
+      deadline,
+    });
+  };
 
   return (
     <Card className="w-full mx-auto mb-6">
       <CardContent>
-        <form onSubmit={handleSuccess} className="space-y-4">
+        <form action={onSubmit} className="space-y-4">
           <div className="space-y-4">
             <Label htmlFor="title">目標タイトル</Label>
             <Input
               id="title"
-              value={formData.title}
-              onChange={(e) => handleInputChange("title", e.target.value)}
+              name="title"
+              value={data?.title}
               placeholder="例: 毎日30分運動する"
               required
             />
@@ -56,6 +83,7 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
           <div className="space-y-4">
             <Label>目標タイプ</Label>
             <RadioGroup
+              name="goalType"
               defaultValue="daily"
               onValueChange={(value) => setGoalType(value as "daily" | "monthly")}
               className="flex space-x-4"
@@ -74,10 +102,10 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
           <div className="space-y-4">
             <Label>目標カテゴリ</Label>
             <Select
-              value={formData.category}
-              onValueChange={(value) => handleInputChange("category", value)}
+              name="category"
+              value={data?.category ?? undefined}
             >
-              <SelectTrigger id="category">
+              <SelectTrigger>
                 <SelectValue placeholder="カテゴリを選択" />
               </SelectTrigger>
               <SelectContent>
@@ -92,11 +120,12 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
-              <Label htmlFor="target">目標値</Label>
+              <Label htmlFor="targetValue">目標値</Label>
               <Input
-                id="target"
-                value={formData.targetValue}
-                onChange={(e) => handleInputChange("targetValue", e.target.value)}
+                id="targetValue"
+                name="targetValue"
+                type="number"
+                value={data?.targetValue}
                 placeholder="例: 30"
                 required
               />
@@ -104,8 +133,8 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
             <div className="space-y-4">
               <Label htmlFor="unit">単位</Label>
               <Select
-                value={formData.unit}
-                onValueChange={(value) => handleInputChange("unit", value)}
+                name="unit"
+                defaultValue=""
               >
                 <SelectTrigger id="unit">
                   <SelectValue placeholder="単位を選択" />
@@ -123,15 +152,15 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
 
           {goalType === "daily" && (
             <div className="space-y-2">
-              <Label>繰り返し</Label>
+              <Label htmlFor="repeatDays">繰り返し</Label>
               <ToggleGroup
                 type="multiple"
-                value={formData.repeatDays}
-                onValueChange={(value) => handleInputChange("repeatDays", value)}
                 className="flex flex-wrap gap-2"
+                value={repeatDays}
+                onValueChange={setRepeatDays}
               >
-                {["月", "火", "水", "木", "金", "土", "日"].map((day) => (
-                  <ToggleGroupItem key={day} value={day} asChild>
+                {week.map((day) => (
+                  <ToggleGroupItem key={day} value={day} name="repeatDays" asChild>
                     <Button variant="outline" type="button">
                       {day}
                     </Button>
@@ -146,10 +175,9 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
               <Label htmlFor="deadline">期限</Label>
               <Input
                 id="deadline"
+                name="deadline"
                 type="date"
-                value={formData.deadline ? format(formData.deadline, "yyyy-MM-dd") : ""}
-                onChange={(e) => handleInputChange("deadline", e.target.value)}
-                required
+                value={data?.deadline?.toISOString().split('T')[0]}
               />
             </div>
           )}
@@ -158,24 +186,28 @@ export const AppGoalForm = ({ onSuccess }: GoalFormProps) => {
             <Label htmlFor="description">詳細説明（任意）</Label>
             <Textarea
               id="description"
-              value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              name="description"
+              value={data?.description ?? undefined}
               placeholder="目標の詳細や達成するための方法など"
             />
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="public"
-              checked={formData.isPublic}
-              onCheckedChange={(checked) => handleInputChange("isPublic", checked)}
+              id="isPublic"
+              name="isPublic"
+              defaultChecked={false}
+              checked={isPublic}
+              onCheckedChange={(checked) => {
+                setIsPublic(checked);
+              }}
             />
-            <Label htmlFor="public">この目標を公開する</Label>
+            <Label htmlFor="isPublic">この目標を公開する</Label>
           </div>
 
           <CardFooter className="flex justify-end space-x-2">
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "保存中..." : "保存"}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "保存中..." : "保存"}
             </Button>
           </CardFooter>
         </form>

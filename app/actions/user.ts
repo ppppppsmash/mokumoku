@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 const handler = async () => {
@@ -12,7 +12,7 @@ const handler = async () => {
       throw new Error("認証されていません");
     }
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: {
         id: userId,
       },
@@ -22,7 +22,7 @@ const handler = async () => {
       return { success: true, message: "ユーザーは既に存在します" };
     }
 
-    await prisma.user.create({
+    await db.user.create({
       data: {
         id: userId,
         email: user?.emailAddresses[0].emailAddress || "",

@@ -1,19 +1,21 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { z } from "zod";
+import { createSafeAction } from "@/lib/create-safe-action";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { Goal } from "@/config/types";
+import { CreateGoal } from "./schema";
+import { db } from "@/lib/db";
 
-export async function createGoal(data: Omit<Goal, "userId">) {
+const handler = async (data: z.infer<typeof CreateGoal>) => {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error("認証されていません");
+  }
+
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      throw new Error("認証されていません");
-    }
-
-    const goal = await prisma.goal.create({
+    const goal = await db.goal.create({
       data: {
         ...data,
         userId,
@@ -28,6 +30,8 @@ export async function createGoal(data: Omit<Goal, "userId">) {
     return { success: true, data: goal };
   } catch (error) {
     console.error("目標作成エラー:", error);
-    return { success: false, message: "目標の作成に失敗しました" };
+    return { success: false, data: undefined };
   }
-}
+};
+
+export const createGoal = createSafeAction(CreateGoal, handler);

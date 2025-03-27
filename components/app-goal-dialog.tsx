@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AppGoalForm } from "@/components/app-goal-form"
+import { AppGoalForm } from "@/components/app-goal-form";
+import { Goal } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,7 @@ import { PlusCircle } from "lucide-react";
 
 export const AppGoalDialog = () => {
   const [open, setOpen] = useState(false);
-
+  const [data, setData] = useState<Goal | null>(null);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -31,7 +32,7 @@ export const AppGoalDialog = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <AppGoalForm onSuccess={() => setOpen(false)} />
+        <AppGoalForm onSuccess={() => setOpen(false)} data={data as Goal} />
       </DialogContent>
     </Dialog>
   );

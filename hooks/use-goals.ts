@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getGoals } from "@/app/actions/get-goals";
 import { toast } from "sonner";
-import { Goal } from "@/config/types";
+import { Goal } from "@prisma/client";
 
 export function useGoals() {
   const [goals, setGoals] = useState<Goal[]>([]);

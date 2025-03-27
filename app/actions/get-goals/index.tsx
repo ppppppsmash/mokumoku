@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 
 export async function getGoals() {
@@ -11,7 +11,7 @@ export async function getGoals() {
       throw new Error("認証されていません");
     }
 
-    const goals = await prisma.goal.findMany({
+    const goals = await db.goal.findMany({
       where: {
         userId,
       },
